@@ -1,0 +1,368 @@
+--DDL queries
+
+
+--(1)
+
+CREATE SCHEMA [au2014] AUTHORIZATION [dbo]
+GO
+
+--(2)
+
+CREATE LOGIN mASter 
+    WITH PASSWORD = '123456';
+CREATE USER mASter FOR LOGIN mASter;
+
+grant all to mASter;
+
+
+--(3)
+
+create login readuser with pASsword='123456';
+create user readuser for login readuser;
+
+EXEC sp_addrolemember N'db_datareader', N'readuser'
+
+--(4) tables customers and transactions
+
+
+CREATE TABLE Customers
+(
+LAStName varchar(50),
+FirstName varchar(50),
+CustId int,
+CustAccount_num varchar(20)
+constraint CK_MyTable_AccNmbr check(CustAccount_num not like '%[a-z]%'),
+PhoneNumber varchar(10)
+        constraint CK_MyTable_PhoneNumber check (PhoneNumber like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
+Email varchar(50)
+CONSTRAINT [EmailCheck] CHECK
+(
+      CHARINDEX('.',[Email],CHARINDEX('@',[Email]))-CHARINDEX('@',[Email])>1
+      AND CHARINDEX('.',REVERSE(LTRIM(RTRIM([Email])))) > 2
+      AND CHARINDEX('@',LTRIM([Email])) > 2
+),
+DOB date,
+SecurityQues1 text,
+SecurityAns1 text,
+SecurityQues2 text,
+SecurityAns2 text,
+Bank_Balance money,        
+cust_address varchar(200),
+Acc_PASsword varchar(200)
+); 
+
+
+create table Transacations
+(
+Custmor_id_to int,
+Customer_id_FROM int,
+amount money,
+account_FROM varchar(20)
+constraint CK_MyTable_AccNmbrto check(account_FROM not like '%[a-z]%'),
+account_to varchar(20)
+constraint CK_MyTable_AccNmbrFROM check(account_to not like '%[a-z]%'),
+transferDate date 
+)
+
+
+
+
+--(f)(i)
+
+CREATE PROCEDURE topUserTrans(@CustUserName nvarchar(50)) 
+AS BEGIN
+
+SELECT TOP 20 custs1.[CustAddress] AS FROMAddress, custs2.[CustAddress] AS ToAddress, trans.[Amount] AS ToAddress 
+FROM Customers AS custs1 INNER JOIN Transacations AS trans
+ON custs1.CustAccount_num = trans.CustAccount_num_FROM
+INNER JOIN  Customers AS custs2 
+ON trans.CustAccount_num_to = custs2.CustAccount_num
+WHERE custs1.FirstName like @CustUserName
+ORDER BY trans.money_tranferred desc
+
+END
+
+
+
+--(f)(ii)
+
+CREATE PROCEDURE topUserTrans(@CustUserName nvarchar(50)) 
+AS BEGIN
+
+SELECT TOP 20 custs1.[CustAddress] AS FROMAdd, custs2.[CustAddress] AS ToAddress, trans.[Amount] AS ToAdd 
+FROM [Customers] AS custs1 INNER JOIN [Transacations] AS trans
+ON custs1.[CustAccountNum] = trans.[AcFROM]
+INNER JOIN  [ASsignment].[dbo].[Customers] AS custs2 
+ON trans.[AcTo] = custs2.[CustAccountNum]
+WHERE custs1.[username] like @CustUserName
+ORDER BY trans.[Amount] desc
+
+END
+
+
+--(f)(iii)
+
+CREATE PROCEDURE topFROMTrans(@CustAccountNum bigint) 
+AS BEGIN
+
+SELECT top 10 * 
+FROM [Transacations]
+WHERE AcFROM like @CustAccountNum
+ORDER BY DateOfTrans desc
+
+END
+
+--(f)(iv)
+
+SELECT CustAccount_num,t_year FROM 
+(
+SELECT rank() 
+over (partition by t_year 
+ORDER BY resultCount desc )
+AS recRank,account_FROM,t_year,resultCount
+FROM (SELECT  account_FROM, datepart(yyyy,transferDate)AS t_Year,count(*) AS resultCount 
+FROM Transacations 
+GROUP BY datepart(yyyy,transferDate),account_FROM
+)AS res
+)AS t , Customers AS c
+WHERE t.recRank<=2 and t.account_FROM=c.CustAccount_num ORDER BY t_year desc 
+
+
+
+
+
+
+
+-- answer 5 
+
+--Function for generating report on 10 large Transacations--
+
+create function largeTransacations(@n INT)
+returns Table
+(
+CustomerID VARCHAR(50),
+CustomerName VARCHAR(50),
+AccountNumber VARCHAR(50),
+TransactionAmount VARCHAR(50)
+)
+AS
+begin
+ SELECT au2014.Customer.CustomerName, top n FROM au2014.Customer C, au2014.customer_account A, au2014.Transacations T
+ WHERE T.FROMAccount=A.AccountNumber and A.CustomerID=C.CustomerID
+ ORDER BY au2014.Transacations.TransferAmount desc
+end
+
+--Function for generating report on top 10 customers who have done most number of Transacations--
+
+create function toptransactingcustomers(@n INT)
+returns Table
+(
+CustomerID VARCHAR(50),
+CustomerName VARCHAR(50),
+AccountNumber VARCHAR(50),
+)
+AS
+begin
+SELECT top n FROM au2014.Customer C,au2014.customer_account A, au2014.Transacations T
+WHERE T.FROMAccount=A.AccountNumber and A.CustomerID=C.CustomerID
+GROUP BY T.FROMAccount
+ORDER BY count(*) desc
+end
+
+
+
+-- DML queries
+
+--ADVENTUREWORKS
+use AdventureWorks2012;
+
+
+-- 1
+
+SELECT p.[FirstName]+' '+p.[LAStName] AS 'ContactName'
+   ,pph.[PhoneNumber]
+   ,ea.EmailAddress
+      ,creditCard.CardNumber
+  FROM [AdventureWorks2012].[Sales].[PersonCreditCard] perCreditCard
+  INNER JOIN [AdventureWorks2012].[Sales].[CreditCard] creditCard
+  ON perCreditCard.CreditCardID = creditCard.CreditCardID 
+  AND creditCard.ExpMonth <= 4 and creditCard.ExpYear <= 2007 
+  INNER JOIN [AdventureWorks2012].[Person].[Person] p
+  ON perCreditCard.BusinessEntityID = p.BusinessEntityID
+  INNER JOIN [AdventureWorks2012].[Person].[PersonPhone] pph
+  ON pph.BusinessEntityID = p.BusinessEntityID
+  INNER JOIN [AdventureWorks2012].[Person].[EmailAddress] ea
+  ON ea.BusinessEntityID = p.BusinessEntityID;
+
+
+-- 2
+
+INSERT INTO [AdventureWorks2012].[Production].[ProductProductPhoto]
+ VALUES (1,87,1,GETDATE());
+ 
+INSERT INTO [AdventureWorks2012].[Production].[ProductProductPhoto]
+ VALUES (1,88,1,GETDATE());
+  
+INSERT INTO [AdventureWorks2012].[Production].[ProductProductPhoto]
+ VALUES (2,69,1,GETDATE());
+ 
+ SELECT ppp.[ProductID]
+ FROM [AdventureWorks2012].[Production].[ProductProductPhoto] AS ppp 
+ INNER JOIN [AdventureWorks2012].[Production].[ProductPhoto] AS pp
+ ON ppp.ProductPhotoID = pp.ProductPhotoID
+ GROUP BY ppp.ProductID
+ HAVING COUNT(pp.ProductPhotoID) > 2
+
+
+--3
+
+SELECT [Production].[Product].ProductID 
+FROM [Production].[Product]
+inner join  
+  (
+   SELECT pp.ProductID
+   FROM [AdventureWorks2012].[Production].[ProductProductPhoto] AS pp 
+   INNER JOIN [AdventureWorks2012].[Production].[ProductPhoto] AS p
+   ON pp.ProductPhotoID = p.ProductPhotoID
+   GROUP BY pp.ProductID
+   HAVING COUNT(pp.ProductPhotoID) > 2
+  )AS Havingtwophotos
+on Havingtwophotos.ProductID= [Production].[Product].ProductID 
+inner join  
+   (
+    SELECT [Production].[Product].ProductID 
+    FROM [Production].[Product]
+    WHERE [Production].[Product].ProductID Not IN 
+    (
+     SELECT [Production].[ProductReview].ProductID
+     FROM [Production].[ProductReview]
+     ) 
+   ) AS Havingnoreview
+   
+on [Production].[Product].ProductID = Havingnoreview.ProductID  
+INNER JOIN 
+ (
+  SELECT distinct Morethanten.ProductID FROM 
+    (
+     SELECT DISTINCT [Sales].[SalesOrderDetail].ProductID
+       FROM [Sales].[SalesOrderDetail]
+       inner join [Sales].[SalesOrderHeader]
+       on [Sales].[SalesOrderDetail].SalesOrderID=[SalesOrderHeader].SalesOrderID
+       GROUP BY [Sales].[SalesOrderDetail].ProductID
+       Having COUNT(SalesOrderHeader.CustomerID)>10
+     )AS Morethanten
+  inner join [Sales].[SalesOrderDetail]
+  on [SalesOrderDetail].ProductID=Morethanten.ProductID
+  inner join [Sales].[SalesOrderHeader]
+  on [SalesOrderHeader].SalesOrderID=[SalesOrderHeader].SalesOrderID
+  GROUP BY Morethanten.ProductID,CustomerID
+  Having Count([SalesOrderDetail].SalesOrderID)>3
+ ) AS Product2
+on  Product2.ProductID=[Product].ProductID
+
+--4
+
+SELECT distinct COUNT(p.ProductID) AS "Num Products"
+FROM SalesLT.Product p
+inner join SalesLT.ProductCategory pc on pc.ProductCategoryID =
+p.ProductCategoryID
+WHERE pc.Name = 'Cranksets'
+and p.ProductID in (
+SELECT prod.ProductID
+FROM SalesLT.Product prod
+inner join SalesLT.SalesOrderDetail sod on sod.ProductID =
+prod.ProductID
+inner join SalesLT.SalesOrderHeader soh on soh.SalesOrderID =
+sod.SalesOrderID
+inner join SalesLT.[Address] ship on ship.AddressID =
+soh.ShipToAddressID
+WHERE ship.City = 'London'
+)
+
+-- 5
+
+SELECT MIN([StandardCost])
+      ,Color
+  FROM [AdventureWorks2012].[Production].[Product]
+  WHERE StandardCost>0.0 AND Color IS NOT NULL
+  GROUP BY Color
+-- 5(b,c,d).
+SELECT p.[Name]
+      ,p.[ListPrice]
+      ,msc.[Color]
+      ,msc.MinimumStandarCost
+  FROM [AdventureWorks2012].[Production].[Product] p
+  INNER JOIN (SELECT MIN(pin.[StandardCost]) AS MinimumStandarCost,pin.[Color]
+  FROM [AdventureWorks2012].[Production].[Product] pin
+  WHERE pin.[StandardCost]>0.0 AND pin.[Color] IS NOT NULL AND (pin.Color = 'Blue' OR  pin.Color = 'Yellow' OR pin.Color = 'Black')
+  GROUP BY pin.[Color]) AS msc
+  ON p.Color = msc.Color and p.StandardCost = msc.MinimumStandarCost;
+
+-- 6 a.
+
+SELECT pc.ProductCategoryID
+ ,avg(p.ListPrice) AS AverageListPrice
+ ,COALESCE(p.Color, 'N/A') AS Color
+ ,COUNT( p.ProductID) AS ProductCount
+ FROM [AdventureWorks2012].[Production].[Product] p
+ INNER JOIN [AdventureWorks2012].[Production].[ProductSubcategory] pc
+ ON pc.ProductSubcategoryID = p.ProductSubcategoryID
+ GROUP BY PC.ProductCategoryID, p.Color
+ 
+--6 b,c,d.
+
+SELECT pcat.Name, col.Color, col.ProductCount, col.AverageListPrice
+ FROM [AdventureWorks2012].[Production].[ProductCategory] pcat
+ INNER JOIN (SELECT pc.ProductCategoryID
+ ,avg(p.ListPrice) AS AverageListPrice
+ ,COALESCE(p.Color, 'N/A') AS Color
+ ,COUNT( p.ProductID) AS ProductCount
+ FROM [AdventureWorks2012].[Production].[Product] p
+ INNER JOIN [AdventureWorks2012].[Production].[ProductSubcategory] pc
+ ON pc.ProductSubcategoryID = p.ProductSubcategoryID
+ GROUP BY PC.ProductCategoryID, p.Color) AS col
+ ON col.ProductCategoryID = pcat.ProductCategoryID
+ ORDER BY pcat.ProductCategoryID;
+
+--7
+
+SELECT cust.CompanyName, soh.SubTotal, SUM(p.Weight) AS "Total Weight"
+FROM SalesLT.SalesOrderHeader soh
+inner join SalesLT.Customer cust on cust.CustomerID = soh.CustomerID
+inner join SalesLT.SalesOrderDetail sod on sod.SalesOrderID =
+soh.SalesOrderID
+inner join SalesLT.Product p on p.ProductID = sod.ProductID
+GROUP BY cust.CompanyName, soh.SubTotal
+ORDER BY soh.SubTotal desc;
+
+
+-- 8
+
+SELECT soh.[SalesPersonID]
+ FROM [AdventureWorks2012].[Sales].[SalesOrderHeader] soh
+ INNER JOIN [AdventureWorks2012].[Sales].[Customer] c
+ ON c.CustomerID = soh.CustomerID
+ WHERE soh.TotalDue > 10000
+ GROUP BY soh.SalesPersonID
+ HAVING COUNT(*) > 5
+
+-- 9.
+
+SELECT *
+ FROM 
+ (SELECT soh.[SalesPersonID]
+  FROM [AdventureWorks2012].[Sales].[SalesOrderHeader] soh
+  INNER JOIN [AdventureWorks2012].[Sales].[Customer] c
+  ON c.CustomerID = soh.CustomerID
+  WHERE soh.TotalDue > 10000
+  GROUP BY soh.SalesPersonID
+  HAVING COUNT(*) > 5) AS A
+ INNER JOIN 
+ (SELECT DISTINCT poh.[EmployeeID]
+   FROM [AdventureWorks2012].[PurchASing].[PurchASeOrderHeader] poh
+   INNER JOIN [AdventureWorks2012].[PurchASing].[PurchASeOrderDetail] pod
+   ON poh.PurchASeOrderID = pod.PurchASeOrderID
+   WHERE pod.RejectedQty > 0.0) AS B
+  ON A.SalesPersonID = B.EmployeeID;
+
+

@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>IEEE754rUtils.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">JunitAssignment1</a> &gt; <a href="index.source.html" class="el_package">junitAssignment</a> &gt; <span class="el_source">IEEE754rUtils.java</span></div><h1>IEEE754rUtils.java</h1><pre class="source lang-java linenums">package junitAssignment;
+
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the &quot;License&quot;); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/**
+ * &lt;p&gt;
+ * Provides IEEE-754r variants of NumberUtils methods.
+ * &lt;/p&gt;
+ * 
+ * &lt;p&gt;
+ * See: &lt;a
+ * href=&quot;http://en.wikipedia.org/wiki/IEEE_754r&quot;&gt;http://en.wikipedia.org/
+ * wiki/IEEE_754r&lt;/a&gt;
+ * &lt;/p&gt;
+ * 
+ * @since 2.4
+ * @version $Id: IEEE754rUtils.java 1436768 2013-01-22 07:07:42Z ggregory $
+ */
+<span class="fc" id="L34">public class IEEE754rUtils {</span>
+
+	/**
+	 * &lt;p&gt;
+	 * Returns the minimum value in an array.
+	 * &lt;/p&gt;
+	 * 
+	 * @param array
+	 *            an array, must not be null or empty
+	 * @return the minimum value in the array
+	 * @throws IllegalArgumentException
+	 *             if &lt;code&gt;array&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
+	 * @throws IllegalArgumentException
+	 *             if &lt;code&gt;array&lt;/code&gt; is empty
+	 */
+	public static double min(final double[] array) {
+		// Validates input
+<span class="fc bfc" id="L51" title="All 2 branches covered.">		if (array == null) {</span>
+<span class="fc" id="L52">			throw new IllegalArgumentException(&quot;The Array must not be null&quot;);</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">		} else if (array.length == 0) {</span>
+<span class="fc" id="L54">			throw new IllegalArgumentException(&quot;Array cannot be empty.&quot;);</span>
+		}
+
+		// Finds and returns min
+<span class="fc" id="L58">		double min = array[0];</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">		for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="fc" id="L60">			min = min(array[i], min);</span>
+		}
+
+<span class="fc" id="L63">		return min;</span>
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Returns the minimum value in an array.
+	 * &lt;/p&gt;
+	 * 
+	 * @param array
+	 *            an array, must not be null or empty
+	 * @return the minimum value in the array
+	 * @throws IllegalArgumentException
+	 *             if &lt;code&gt;array&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
+	 * @throws IllegalArgumentException
+	 *             if &lt;code&gt;array&lt;/code&gt; is empty
+	 */
+	public static float min(final float[] array) {
+		// Validates input
+<span class="fc bfc" id="L81" title="All 2 branches covered.">		if (array == null) {</span>
+<span class="fc" id="L82">			throw new IllegalArgumentException(&quot;The Array must not be null&quot;);</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">		} else if (array.length == 0) {</span>
+<span class="fc" id="L84">			throw new IllegalArgumentException(&quot;Array cannot be empty.&quot;);</span>
+		}
+
+		// Finds and returns min
+<span class="fc" id="L88">		float min = array[0];</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">		for (int i = 1; i &lt; array.length; i++) {</span>
+<span class="fc" id="L90">			min = min(array[i], min);</span>
+		}
+
+<span class="fc" id="L93">		return min;</span>
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Gets the minimum of three &lt;code&gt;double&lt;/code&gt; values.
+	 * &lt;/p&gt;
+	 * 
+	 * &lt;p&gt;
+	 * NaN is only returned if all numbers are NaN as per IEEE-754r.
+	 * &lt;/p&gt;
+	 * 
+	 * @param a
+	 *            value 1
+	 * @param b
+	 *            value 2
+	 * @param c
+	 *            value 3
+	 * @return the smallest of the values
+	 */
+	public static double min(final double a, final double b, final double c) {
+<span class="fc" id="L114">		return min(min(a, b), c);</span>
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Gets the minimum of two &lt;code&gt;double&lt;/code&gt; values.
+	 * &lt;/p&gt;
+	 * 
+	 * &lt;p&gt;
+	 * NaN is only returned if all numbers are NaN as per IEEE-754r.
+	 * &lt;/p&gt;
+	 * 
+	 * @param a
+	 *            value 1
+	 * @param b
+	 *            value 2
+	 * @return the smallest of the values
+	 */
+	public static double min(final double a, final double b) {
+<span class="fc bfc" id="L133" title="All 2 branches covered.">		if (Double.isNaN(a)) {</span>
+<span class="fc" id="L134">			return b;</span>
+<span class="fc bfc" id="L135" title="All 2 branches covered.">		} else if (Double.isNaN(b)) {</span>
+<span class="fc" id="L136">			return a;</span>
+		} else {
+<span class="fc" id="L138">			return Math.min(a, b);</span>
+		}
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Gets the minimum of three &lt;code&gt;float&lt;/code&gt; values.
+	 * &lt;/p&gt;
+	 * 
+	 * &lt;p&gt;
+	 * NaN is only returned if all numbers are NaN as per IEEE-754r.
+	 * &lt;/p&gt;
+	 * 
+	 * @param a
+	 *            value 1
+	 * @param b
+	 *            value 2
+	 * @param c
+	 *            value 3
+	 * @return the smallest of the values
+	 */
+	public static float min(final float a, final float b, final float c) {
+<span class="fc" id="L160">		return min(min(a, b), c);</span>
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Gets the minimum of two &lt;code&gt;float&lt;/code&gt; values.
+	 * &lt;/p&gt;
+	 * 
+	 * &lt;p&gt;
+	 * NaN is only returned if all numbers are NaN as per IEEE-754r.
+	 * &lt;/p&gt;
+	 * 
+	 * @param a
+	 *            value 1
+	 * @param b
+	 *            value 2
+	 * @return the smallest of the values
+	 */
+	public static float min(final float a, final float b) {
+<span class="fc bfc" id="L179" title="All 2 branches covered.">		if (Float.isNaN(a)) {</span>
+<span class="fc" id="L180">			return b;</span>
+<span class="fc bfc" id="L181" title="All 2 branches covered.">		} else if (Float.isNaN(b)) {</span>
+<span class="fc" id="L182">			return a;</span>
+		} else {
+<span class="fc" id="L184">			return Math.min(a, b);</span>
+		}
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Returns the maximum value in an array.
+	 * &lt;/p&gt;
+	 * 
+	 * @param array
+	 *            an array, must not be null or empty
+	 * @return the minimum value in the array
+	 * @throws IllegalArgumentException
+	 *             if &lt;code&gt;array&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
+	 * @throws IllegalArgumentException
+	 *             if &lt;code&gt;array&lt;/code&gt; is empty
+	 */
+	public static double max(final double[] array) {
+		// Validates input
+<span class="nc bnc" id="L203" title="All 2 branches missed.">		if (array == null) {</span>
+<span class="nc" id="L204">			throw new IllegalArgumentException(&quot;The Array must not be null&quot;);</span>
+<span class="nc bnc" id="L205" title="All 2 branches missed.">		} else if (array.length == 0) {</span>
+<span class="nc" id="L206">			throw new IllegalArgumentException(&quot;Array cannot be empty.&quot;);</span>
+		}
+
+		// Finds and returns max
+<span class="nc" id="L210">		double max = array[0];</span>
+<span class="nc bnc" id="L211" title="All 2 branches missed.">		for (int j = 1; j &lt; array.length; j++) {</span>
+<span class="nc" id="L212">			max = max(array[j], max);</span>
+		}
+
+<span class="nc" id="L215">		return max;</span>
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Returns the maximum value in an array.
+	 * &lt;/p&gt;
+	 * 
+	 * @param array
+	 *            an array, must not be null or empty
+	 * @return the minimum value in the array
+	 * @throws IllegalArgumentException
+	 *             if &lt;code&gt;array&lt;/code&gt; is &lt;code&gt;null&lt;/code&gt;
+	 * @throws IllegalArgumentException
+	 *             if &lt;code&gt;array&lt;/code&gt; is empty
+	 */
+	public static float max(final float[] array) {
+		// Validates input
+<span class="fc bfc" id="L233" title="All 2 branches covered.">		if (array == null) {</span>
+<span class="fc" id="L234">			throw new IllegalArgumentException(&quot;The Array must not be null&quot;);</span>
+<span class="fc bfc" id="L235" title="All 2 branches covered.">		} else if (array.length == 0) {</span>
+<span class="fc" id="L236">			throw new IllegalArgumentException(&quot;Array cannot be empty.&quot;);</span>
+		}
+
+		// Finds and returns max
+<span class="fc" id="L240">		float max = array[0];</span>
+<span class="fc bfc" id="L241" title="All 2 branches covered.">		for (int j = 1; j &lt; array.length; j++) {</span>
+<span class="fc" id="L242">			max = max(array[j], max);</span>
+		}
+
+<span class="fc" id="L245">		return max;</span>
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Gets the maximum of three &lt;code&gt;double&lt;/code&gt; values.
+	 * &lt;/p&gt;
+	 * 
+	 * &lt;p&gt;
+	 * NaN is only returned if all numbers are NaN as per IEEE-754r.
+	 * &lt;/p&gt;
+	 * 
+	 * @param a
+	 *            value 1
+	 * @param b
+	 *            value 2
+	 * @param c
+	 *            value 3
+	 * @return the largest of the values
+	 */
+	public static double max(final double a, final double b, final double c) {
+<span class="fc" id="L266">		return max(max(a, b), c);</span>
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Gets the maximum of two &lt;code&gt;double&lt;/code&gt; values.
+	 * &lt;/p&gt;
+	 * 
+	 * &lt;p&gt;
+	 * NaN is only returned if all numbers are NaN as per IEEE-754r.
+	 * &lt;/p&gt;
+	 * 
+	 * @param a
+	 *            value 1
+	 * @param b
+	 *            value 2
+	 * @return the largest of the values
+	 */
+	public static double max(final double a, final double b) {
+<span class="fc bfc" id="L285" title="All 2 branches covered.">		if (Double.isNaN(a)) {</span>
+<span class="fc" id="L286">			return b;</span>
+<span class="fc bfc" id="L287" title="All 2 branches covered.">		} else if (Double.isNaN(b)) {</span>
+<span class="fc" id="L288">			return a;</span>
+		} else {
+<span class="fc" id="L290">			return Math.max(a, b);</span>
+		}
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Gets the maximum of three &lt;code&gt;float&lt;/code&gt; values.
+	 * &lt;/p&gt;
+	 * 
+	 * &lt;p&gt;
+	 * NaN is only returned if all numbers are NaN as per IEEE-754r.
+	 * &lt;/p&gt;
+	 * 
+	 * @param a
+	 *            value 1
+	 * @param b
+	 *            value 2
+	 * @param c
+	 *            value 3
+	 * @return the largest of the values
+	 */
+	public static float max(final float a, final float b, final float c) {
+<span class="fc" id="L312">		return max(max(a, b), c);</span>
+	}
+
+	/**
+	 * &lt;p&gt;
+	 * Gets the maximum of two &lt;code&gt;float&lt;/code&gt; values.
+	 * &lt;/p&gt;
+	 * 
+	 * &lt;p&gt;
+	 * NaN is only returned if all numbers are NaN as per IEEE-754r.
+	 * &lt;/p&gt;
+	 * 
+	 * @param a
+	 *            value 1
+	 * @param b
+	 *            value 2
+	 * @return the largest of the values
+	 */
+	public static float max(final float a, final float b) {
+<span class="fc bfc" id="L331" title="All 2 branches covered.">		if (Float.isNaN(a)) {</span>
+<span class="fc" id="L332">			return b;</span>
+<span class="fc bfc" id="L333" title="All 2 branches covered.">		} else if (Float.isNaN(b)) {</span>
+<span class="fc" id="L334">			return a;</span>
+		} else {
+<span class="fc" id="L336">			return Math.max(a, b);</span>
+		}
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.0.201403182114</span></div></body></html>

@@ -1,0 +1,464 @@
+USE advancedDbmsAssignment
+
+--1-- creating database for the system --
+
+-- Bus Depot – Should be uniquely identified and has a name and address.
+CREATE TABLE BusDepot(
+ [BusDepotID] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
+ [Name] VARCHAR(225),
+ [Address] VARCHAR(225) 
+);
+
+-- Bus Driver – Should be uniquely identified  , is associated with a   particular depot  and has a name , earns salary.
+CREATE TABLE BusDriver(
+ [BusDriverID] INT identity(1,1) Not Null PRIMARY KEY,
+ [BusDepotID] INT FOREIGN KEY REFERENCES BusDepot([BusDepotID]),
+ [Name] VARCHAR(225),
+ [Salary] DECIMAL(7,2)
+);
+
+-- Bus Cleaner - Should be uniquely identified ,is associated with a particular depot and has a name ,earns salary.
+CREATE TABLE BusCleaner(
+ [BusCleanerID] INT identity(1,1) Not Null PRIMARY KEY,
+ [BusDepotID] INT FOREIGN KEY REFERENCES BusDepot([BusDepotID]),
+ [Name] VARCHAR(225),
+ [Salary] DECIMAL(7,2)
+);
+
+-- Bus Route -  Should be uniquely identified , has a name/description and starts from a particular depot. 
+CREATE TABLE BusRoute(
+ [BusRouteID] INT identity(1,1) Not Null PRIMARY KEY, 
+ [Name] VARCHAR(225),
+ [Description] VARCHAR(225),
+ [StartBusDepotID] INT FOREIGN KEY REFERENCES BusDepot([BusDepotID])
+);
+
+-- Bus – Should have a registration number,model name and type . Each bus will be having a driver and cleaner from 
+-- the same depot associated with it and will ply on a particular route.
+CREATE TABLE Bus(
+ [BusID] INT identity(1,1) Not Null PRIMARY KEY, 
+ [Name] VARCHAR(225),
+ [Model] VARCHAR(50),
+ [Type] VARCHAR(25),
+ [StartBusDepotID] INT FOREIGN KEY REFERENCES BusDepot([BusDepotID]),
+ [BusDriverID] INT FOREIGN KEY REFERENCES BusDriver([BusDriverID]),
+ [BusCleanerID] INT FOREIGN KEY REFERENCES BusCleaner([BusCleanerID]),
+ [BusRouteID] INT FOREIGN KEY REFERENCES BusRoute([BusRouteID])
+);
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+-- 2. Stored procedure's which will take values for the columns of these tables as input and insert the data .
+-- Bus Depot
+
+
+
+CREATE PROCEDURE InsertBusDepot(@name VARCHAR(225), @address VARCHAR(225))
+AS
+BEGIN
+ INSERT INTO [advancedDbmsAssignment].[dbo].[BusDepot]
+           ([Name]
+           ,[Address])
+     VALUES (@name, @address)
+END
+
+EXEC InsertBusDepot 'Depot 2','Shanti Nagar, Bangalore';
+EXEC InsertBusDepot 'Depot 3','Jayanagar, Bangalore';
+EXEC InsertBusDepot 'Depot 4','Indiranagar, Bangalore';
+EXEC InsertBusDepot 'Depot 5','Subhashnagar, Bangalore';
+
+-- Bus Driver
+CREATE PROCEDURE InsertBusDriver(@busdepotid INT,@name VARCHAR(225), @salary DECIMAL(7,2))
+AS
+BEGIN
+ INSERT INTO [advancedDbmsAssignment].[dbo].[BusDriver]
+           ([BusDepotID]
+           ,[Name]
+           ,[Salary])
+     VALUES (@busdepotid, @name, @salary)
+END
+
+EXEC InsertBusDriver 1,'Prakash A', 20000.45;
+EXEC InsertBusDriver 1,'Shadhakshariah', 21000.45;
+
+EXEC InsertBusDriver 2,'Harish Kumar S N', 20000.45;
+EXEC InsertBusDriver 2,' Manjunath K V', 21000.45;
+
+EXEC InsertBusDriver 3,'Wilson Lobo', 20000.45;
+EXEC InsertBusDriver 3,'B Anjanappa', 21000.45;
+
+EXEC InsertBusDriver 4,'Basappa M', 20000.45;
+EXEC InsertBusDriver 4,'Chandrashekar M', 21000.45;
+
+--Bus Cleaner
+CREATE PROCEDURE InsertBusCleaner(@busdepotid INT,@name VARCHAR(225), @salary DECIMAL(7,2))
+AS
+BEGIN
+ INSERT INTO [advancedDbmsAssignment].[dbo].[BusCleaner]
+           ([BusDepotID]
+           ,[Name]
+           ,[Salary])
+     VALUES (@busdepotid, @name, @salary)
+END
+
+EXEC InsertBusCleaner 1,'Prakash A', 10000.45;
+EXEC InsertBusCleaner 1,'Shadhakshariah', 11000.45;
+
+EXEC InsertBusCleaner 2,'Harish Kumar S N', 10000.45;
+EXEC InsertBusCleaner 2,' Manjunath K V', 11000.45;
+
+EXEC InsertBusCleaner 3,'Wilson Lobo', 10000.45;
+EXEC InsertBusCleaner 3,'B Anjanappa', 11000.45;
+
+EXEC InsertBusCleaner 4,'Basappa M', 10000.45;
+EXEC InsertBusCleaner 4,'Chandrashekar M', 11000.45;
+
+-- Bus Route
+CREATE PROCEDURE InsertBusRoute(@name VARCHAR(225), @description VARCHAR(225), @busdeport INT)
+AS
+BEGIN
+ INSERT INTO [advancedDbmsAssignment].[dbo].[BusRoute]
+           ([Name]
+           ,[Description]
+           ,[StartBusDepotID])
+     VALUES (@name, @description, @busdeport)
+END
+
+EXEC InsertBusRoute '171E','Koramangala to Kempegowda Bus Station', 1;
+EXEC InsertBusRoute '171J','Koramangala to Kempegowda Bus Station', 1;
+
+EXEC InsertBusRoute '340L','KH Road to Koramangala', 2;
+EXEC InsertBusRoute '341E','KH Road to Koramangala', 2;
+
+EXEC InsertBusRoute '181','Krishnarajendra Market to Jayanagara', 3;
+EXEC InsertBusRoute '306E','BMTC Depot-3 to Krishnarajendra Market', 3;
+
+EXEC InsertBusRoute '270HA','Jayanagara to Cauvery Bhavana', 4;
+EXEC InsertBusRoute '286','Cauvery Bhavana to Srirampura', 4;
+
+-- Bus
+CREATE PROCEDURE InsertBus(@name VARCHAR(225), @model VARCHAR(50), @type VARCHAR(25), @busdepot INT, @driverid INT, @cleanerid INT, @routeid INT)
+AS
+BEGIN
+ INSERT INTO [advancedDbmsAssignment].[dbo].[Bus]
+           ([Name]
+           ,[Model]
+           ,[Type]
+           ,[StartBusDepotID]
+           ,[BusDriverID]
+           ,[BusCleanerID]
+           ,[BusRouteID])
+     VALUES (@name, @model, @type, @busdepot, @driverid, @cleanerid, @routeid)
+END
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+-- 3. take a cleaner's number and return his name and salary --
+
+Create Procedure cleanerInfo
+(
+@cleanerId INT,                   --Input parameter ,  cleaner id of bus cleaner
+@cleanerName VARCHAR (200) OUT,    -- Output parameter to collect the cleaner name
+@cleanerSalary Decimal (7,2)OUT     -- Output Parameter to collect the cleaner salary
+)
+AS
+BEGIN
+SELECT @cleanerName= name, 
+    @cleanerSalary=salary FROM advancedDbmsAssignment.dbo.BusCleaner WHERE buscleanerid=@cleanerId
+END
+
+
+-- executing the procedure cleanerInfo
+
+Declare @clname as nvarchar(200)   -- Declaring the variable to collect the cleaner name
+Declare @clsalary as Decimal (7,2)     -- Declaring the variable to collect the cleaner salary
+Execute cleanerInfo 1 , @clname output, @clsalary output
+select @clname,@clsalary      -- "Select" Statement is used to show the output from Procedure
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+
+--4 select nth highest salary for person type
+
+CREATE Function 
+f_NthHighestSalary(@n int,@type varchar (10))
+RETURNS float
+AS 
+-- Returns the nth highest salary for the product.
+BEGIN
+Declare @ret int
+IF @type = 'cleaner'
+  BEGIN
+    SET @ret = (SELECT TOP 1 salary FROM (SELECT DISTINCT TOP (@n) Salary FROM BusCleaner as BusClean ORDER BY salary DESC
+      ) a
+ ORDER BY salary)
+ 
+ END
+ 
+ Else IF @type = 'driver'
+   Begin
+   SET @ret = (SELECT TOP 1 salary FROM (SELECT DISTINCT TOP 2 Salary FROM BusDriver as BusClean ORDER BY salary DESC
+      ) a
+ ORDER BY salary)
+ end
+    return @ret
+END
+GO
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+--5 --
+
+
+CREATE VIEW QualifiedDrivers 
+AS
+SELECT [BusDepotID]
+        ,[Name]
+        ,[Salary]
+ FROM [advancedDbmsAssignment].[dbo].[BusDriver] 
+ WHERE [BusDepotID] 
+ IN (SELECT [StartBusDepotID] 
+  FROM [advancedDbmsAssignment].[dbo].[BusRoute]
+  WHERE [Description] LIKE '%M.G Road%')
+
+SELECT *
+ FROM QualifiedDrivers
+ WHERE [Salary] > 2000
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+ 
+--6--
+
+CREATE PROCEDURE GetTop10Routes
+AS
+BEGIN
+  
+ DECLARE @id varchar(225)
+ DECLARE @name varchar(225)
+ DECLARE @description varchar(225)
+ DECLARE @depotId varchar
+ DECLARE @numberOfBuses varchar
+
+ DECLARE gettop10 CURSOR FOR
+  SELECT TOP 10 b.[BusRouteID], b.[Name], b.[Description], b.StartBusDepotID,a.NumberOfBuses  
+   FROM [advancedDbmsAssignment].[dbo].[BusRoute] b,
+   (SELECT [BusRouteID], COUNT([BusID]) AS 'NumberOfBuses' 
+    FROM  [advancedDbmsAssignment].[dbo].[Bus] 
+    GROUP BY [BusRouteID]) a
+   WHERE b.[BusRouteID] = a.[BusRouteID]
+   ORDER BY a.NumberOfBuses
+
+ OPEN gettop10 -- open the cursor
+
+ FETCH NEXT FROM gettop10
+    INTO @id, @name, @description, @depotId, @numberOfBuses
+    PRINT @id + ' ' + @name + ' ' + @description + ' ' + @depotId + ' ' + @numberOfBuses
+
+ WHILE @@FETCH_STATUS = 0
+ BEGIN
+    FETCH NEXT FROM gettop10
+    INTO @id, @name, @description, @depotId, @numberOfBuses
+    PRINT @id + ' ' + @name + ' ' + @description + ' ' + @depotId + ' ' + @numberOfBuses
+ END
+ CLOSE gettop10
+ DEALLOCATE gettop10
+END
+
+Exec GetTop10Routes
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+--7--
+
+CREATE TRIGGER SalaryIncrease20 
+ ON [advancedDbmsAssignment].[dbo].[BusDriver]
+ INSTEAD OF UPDATE AS
+  DECLARE @id INT
+  DECLARE @oldsal DECIMAL(7,2)
+  DECLARE @newsal DECIMAL(7,2)
+  
+  SELECT @id = i.[BusDriverID] from inserted i;
+  SELECT @oldsal = [Salary] FROM [advancedDbmsAssignment].[dbo].[BusDriver] WHERE [BusDriverID]=@id
+  SELECT @newsal = i.[Salary] FROM inserted i
+  IF @newsal > ( @oldsal + 0.2*@oldsal)
+   PRINT 'Driver''s salary cannot be increased by more than 20% of original salary';
+  ELSE
+   UPDATE [advancedDbmsAssignment].[dbo].[BusDriver] SET [Salary]=@newsal WHERE [BusDriverID]=@id
+   
+UPDATE [advancedDbmsAssignment].[dbo].[BusDriver] SET [Salary]=21110 WHERE [BusDriverID]=1
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+--8--
+
+-- Create a trigger with a rule that no cleaner should be given a job in a depot if his initial salary is 
+-- greater than any of the existing driver's salary working in the same depot. All such cleaner entries need 
+-- to logged in an archive table called "unlucky cleaners".
+
+CREATE TABLE UnluckyCleaners(
+ [UnluckyBusCleanerID] INT identity(1,1) Not Null PRIMARY KEY,
+ [UnluckyBusDepotID] INT FOREIGN KEY REFERENCES BusDepot([BusDepotID]),
+ [UnluckyName] VARCHAR(225),
+ [UnluckySalary] DECIMAL(7,2)
+ );
+
+CREATE TRIGGER UnlucyCleaner ON [advancedDbmsAssignment].[dbo].[BusCleaner]
+ INSTEAD OF INSERT AS
+ DECLARE @id INT
+ DECLARE @name VARCHAR(50)
+ DECLARE @cleanerSalary DECIMAL(7,2)
+ DECLARE @driverSalary DECIMAL(7,2)
+ DECLARE @depotID INT
+ 
+ SELECT @id = i.BusCleanerID FROM inserted i;
+ SELECT @name = i.[Name] FROM inserted i;
+ SELECT @depotID = i.[BusDepotID] FROM inserted i;
+ SELECT @cleanerSalary = i.[Salary] FROM inserted i;
+ SELECT @driverSalary = [Salary] FROM [advancedDbmsAssignment].[dbo].[BusDriver] WHERE [BusDepotID]=@depotID
+ 
+ IF @cleanerSalary > @driverSalary
+ BEGIN
+  PRINT 'Unlucky Cleaner'  
+  INSERT INTO [advancedDbmsAssignment].[dbo].[UnluckyCleaners] VALUES (@depotID, @name,@cleanerSalary)
+  ROLLBACK TRANSACTION;
+ END
+ ELSE
+ INSERT INTO [advancedDbmsAssignment].[dbo].[BusCleaner] VALUES (@depotID, @name,@cleanerSalary);
+
+EXEC InsertBusCleaner 1,'Prakash A', 30000.45;
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+--9--
+
+
+CREATE PROCEDURE deleteDuplicate
+AS
+BEGIN
+  WITH duplicateBusDetails AS ( SELECT * , rownum = ROW_NUMBER()OVER (PARTITION BY [RegistrationNum] ORDER BY [RegistrationNum]) 
+       FROM [advancedDbmsAssignment].[dbo].[Bus])
+  DELETE FROM duplicateBusDetails WHERE rownum > 1
+END
+
+EXEC deleteDuplicate
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+--10--
+
+
+
+CREATE TRIGGER BusDuplicateCheck
+ON Bus
+INSTEAD OF INSERT
+AS
+DECLARE @Name nvarchar(10)
+DECLARE @Model nvarchar(20)
+DECLARE @Type nvarchar(20)
+DECLARE @DriverID nvarchar(10)
+DECLARE @CleanerID nvarchar(10)
+DECLARE @DepoID nvarchar(10)
+DECLARE @RouteID nvarchar(10)
+SELECT @Name=i.Name FROM inserted i
+SELECT @Model=i.Model FROM inserted i
+SELECT @Type=i.Type FROM inserted i
+SELECT @DriverID=i.DriverID FROM inserted i
+SELECT @CleanerID=i.CleanerID FROM inserted i
+SELECT @DepoID=i.DepoID FROM inserted i
+SELECT @RouteID=i.RouteID FROM inserted i
+PRINT @Name
+PRINT @Model
+PRINT @Type
+PRINT @DriverID
+PRINT @CleanerID
+PRINT @DepoID
+PRINT @RouteID
+BEGIN
+ IF EXISTS (SELECT * FROM Bus WHERE Name=@Name
+ AND Model= @Model AND Type=@Type AND DriverID=@DriverID
+ AND CleanerID=@CleanerID AND DepoID=@DepoID AND RouteID=@RouteID)
+   PRINT 'Already Exists!'
+ INSERT INTO dbo.Bus VALUES(@Name,@Model,@Type,@DriverID,@CleanerID,@DepoID,@RouteID)
+END
+
+DECLARE @name1 nvarchar(10)
+DECLARE @Model1 nvarchar(20)
+DECLARE @Type1 nvarchar(20)
+DECLARE @DepoID1 nvarchar(10)
+DECLARE @DriverID1 nvarchar(10)
+DECLARE @CleanerID1 nvarchar(10)
+DECLARE @RouteID1 nvarchar(10)
+SET @DriverID1='D1000'
+SET @CleanerID1='C1000'
+SET @Name='b1013'
+SET @Model1='jr3'
+SET @Type1='loo'
+SET @DepoID1='A1000'
+SET @RouteID1='R1002'
+EXEC st_Bus @Name=@Name1,@Model=@Model1,@Type=@Type1,
+ @DriverID=@DriverID1,@CleanerID=@CleanerID1,@DepoID=@DepoID1,@RouteID=@RouteID1
+ 
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+
+
+
+--11---
+ 
+create trigger duplicates on Bus 
+for insert as
+if exists ( select * from Bus  inner join inserted i on i.ModelName = Bus.ModelName and i.CleanerID=Bus.CleanerID 
+and i.Name = Bus.Name and i.DriverID=Bus.DriverID and i.ModelType=Bus.ModelType 
+and i.RoutID=Bus.RoutID )
+ print 'Duplicate Bus Details'
+else
+ print 'New Bus Details'

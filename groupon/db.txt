@@ -1,0 +1,28 @@
+CREATE TABLE `person` (
+  `username` VARCHAR(100) NOT NULL,
+  `password` VARCHAR(100) NULL,
+  `type` VARCHAR(100) NULL,
+  `address` VARCHAR(100) NULL,
+  PRIMARY KEY (`username`));
+
+CREATE TABLE `offer` (
+  `name` VARCHAR(100) NOT NULL,
+  `description` VARCHAR(500) NULL,
+  `numPeople` INT NULL,
+  `image` BLOB NULL,
+  `startDate` DATE NULL,
+  `endDate` DATE NULL,
+  `category` VARCHAR(100) NULL,
+  `price` DECIMAL(9,2) NULL,
+  PRIMARY KEY (`name`));
+
+
+CREATE TABLE `liveoffer` (
+  `name` VARCHAR(100) NOT NULL,
+  `numsubscribed` INT NULL,
+  PRIMARY KEY (`name`));
+
+CREATE TABLE `personoffer` (
+  `username` VARCHAR(100) NOT NULL,
+  `offername` VARCHAR(100) NULL,
+  PRIMARY KEY (`username`));

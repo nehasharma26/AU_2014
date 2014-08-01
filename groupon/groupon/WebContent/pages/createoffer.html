@@ -1,0 +1,43 @@
+<div>
+<form name="createoffer" class="form-style"
+		data-ng-submit="createoffer()"
+		data-ng-controller="createController">
+<h1>Create Offer</h1>
+<table>
+			<tr>
+				<td>Offer name:</td>
+				<td><input type="text" data-ng-model="offer.name" /></td>
+			</tr>
+			<tr>
+				<td>Description:</td>
+				<td><input type="text" data-ng-model="offer.desc" /></td>
+			</tr>
+			<tr>
+				<td>NUmber of people:</td>
+				<td><input type="text" data-ng-model="offer.ppl" /></td>
+			</tr>
+			<tr>
+				<td>Image:</td>
+				<td><input type="image" data-ng-model="offer.img" /></td>
+			</tr>
+			<tr>
+				<td>Start date:</td>
+				<td><input type="date" data-ng-model="offer.startdate" /></td>
+			</tr>
+			<tr>
+				<td>End date:</td>
+				<td><input type="date" data-ng-model="offer.enddate" /></td>
+			</tr>
+			<tr>
+				<td>Category:</td>
+				<td><input type="text" data-ng-model="offer.categ" /></td>
+			</tr>
+			<tr>
+				<td>Price:</td>
+				<td><input type="text" data-ng-model="offer.price" /></td>
+			</tr>
+
+			</table>
+			<button type="submit" class="button">Create offer</button>
+			</form>
+</div>

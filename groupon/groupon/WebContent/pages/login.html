@@ -1,0 +1,31 @@
+<div>
+	<form name="loginform" class="form-style" data-ng-submit="checkuser()"
+		data-ng-controller="loginController">
+		<h1>Login</h1>
+		<table>
+			<tr>
+				<td>Email</td>
+				<td><input type="email" id="user.username" /></td>
+			</tr>
+
+			<tr>
+				<td>Password</td>
+				<td><input type="password" id="user.pwd" /></td>
+			</tr>
+
+
+			<tr>
+				<td>Select user type</td>
+				<td><select id="user.persontype">
+						<option value="corp">Corporate</option>
+						<option value="user">End user</option>
+				</select></td>
+			</tr>
+<tr>
+			<td><a style="display:none" data-ng-model="user.login" href="#">login</a></td>
+
+			</tr>
+		</table>
+		<button type="submit" data-ng-click="changeState()" class="button">Login</button>
+	</form>
+</div>

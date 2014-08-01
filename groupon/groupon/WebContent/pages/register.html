@@ -1,0 +1,40 @@
+<div>
+	<form name="registration" class="form-style"
+		data-ng-submit="createuser()"
+		data-ng-controller="registerController">
+		<h1>Registration</h1>
+		<table>
+			<tr>
+				<td>Email</td>
+				<td><input type="email" id="username" data-ng-model="user.email" /></td>
+			</tr>
+
+			<tr>
+				<td>Password</td>
+				<td><input type="password" id="pwd" data-ng-model="user.pwd" /></td>
+			</tr>
+			<tr></tr>
+
+			<tr></tr>
+			<tr>
+				<td>Select user type</td>
+				<td><select id="persontype" data-ng-model="user.persontype">
+						<option value="corp">Corporate</option>
+						<option value="user">End user</option>
+				</select></td>
+			</tr>
+
+			<tr>
+				<td>Address</td>
+				<td><input type="text" id="address" data-ng-model="user.address" /></td>
+			</tr>
+			<tr>
+			<td><a style="display:none" data-ng-model="user.signup" href="#">register</a></td>
+
+			</tr>
+		</table>
+		<button type="submit" data-ng-click="changeState()" class="button">Register</button>
+
+
+	</form>
+</div>

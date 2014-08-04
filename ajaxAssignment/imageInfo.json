@@ -1,0 +1,35 @@
+{ 
+"img" :
+	[
+  	{
+  	"name":"image1",
+    "url": "images/img1.jpg",
+    "reference": "http://www.google.com/",
+    "info": "image 1 details"
+    },
+  {
+    "name":"image2",
+    "url": "images/img2.jpg",
+    "reference": "http://www.google.com/",
+    "info": "image 2 details"
+  },
+  {
+    "name":"image3",   
+    "url": "images/img3.jpg",
+    "reference": "http://www.google.com/",
+    "info": "image 3 details"
+  },
+  {
+    "name":"image4",
+    "url": "images/img4.jpg",
+    "reference": "http://www.google.com/",
+    "info": "image 4 details"
+  },
+  {
+    "name":"image5",
+    "url": "images/img5.jpg",
+    "reference": "http://www.google.com/",
+    "info": "image 5 details"
+  },
+]
+}

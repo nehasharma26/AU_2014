@@ -1,0 +1,84 @@
+
+
+<html>
+<head>
+<!-- <meta content="text/html; charset=ISO-8859-1" http-equiv="content-type"> -->
+<script type="application/javascript">
+
+var data_file= "imageInfo.json";
+
+   var i=-1;
+   document.onload(loadJSON());
+   
+   
+   function loadJSON() {   
+   var http_request = new XMLHttpRequest();
+   http_request.onreadystatechange  = function(){
+      
+	if (http_request.readyState == 4  )
+    {
+		var json = JSON.parse(http_request.responseText);
+		jsonObj=json.albums;
+		count=jsonObj.length;
+		alert(count);
+    }
+   }
+   
+   http_request.open("GET", "imageInfo.json" , true);
+   http_request.send();
+}
+
+
+function loadphoto(flag)
+{
+		if(i<count-1 && flag)
+		{
+			i++;
+		}
+		if(i>0 && flag==0)
+		{
+			i--;
+		}
+		
+        document.getElementById("Name").innerHTML =  jsonObj[i].Name;
+		document.getElementById("description").innerHTML = jsonObj[i].description;
+		document.getElementById("reference").innerHTML = jsonObj[i].reference;
+		document.getElementById("info").innerHTML = jsonObj[i].info;
+	    document.getElementById("img1").src =jsonObj[i].imgurl;	
+	    alert(jsonObj[i]);
+	
+}
+</script>
+<title>assignment</title>
+</head>
+<body>
+<h1>images</h1>
+<img id="img1" src="" height="500" width="500" border="0"/>
+<table class="src2">
+<tr>
+	<td>Name : </td>
+	<td><div id="Name"></div></td>
+</tr>
+<tr>
+	<td>Description : </td>
+	<td><div id="description"></div></td>
+</tr>
+<tr>
+	<td>Reference : </td>
+	<td><div id="reference"></div></td>
+</tr>
+<tr>
+	<td>Info: </td>
+	<td><div id="info"></div></td>
+</tr>
+
+</table>
+
+
+<div class="central">
+<button type="button" onclick="loadphoto(0)">Previous  </button>
+<button type="button" onclick="loadphoto(1)">Next  </button>
+</div>
+ 
+</body>
+</html>

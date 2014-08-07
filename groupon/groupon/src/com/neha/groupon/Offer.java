@@ -45,7 +45,7 @@ public class Offer extends HttpServlet {
 
 	    try {
 	        JSONObject jObj = new JSONObject(request.getParameter("offer_data"));
-	        DBConnect conn = new DBConnect("jdbc:mysql://localhost:3306/groupondb", "root","adit2012");
+	        DBConnect conn = new DBConnect("jdbc:mysql://localhost:3306/groupon", "root","");
 	        Iterator<String> it = jObj.keys(); 
 	        if(jObj.has("add_offer")){
 	        	int numPeople,price;

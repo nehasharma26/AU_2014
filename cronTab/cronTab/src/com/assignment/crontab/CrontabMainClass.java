@@ -8,8 +8,6 @@ public class CrontabMainClass {
 
 	public static void crontabMainClass() {
 		tm = new TreeMap();
-		JobAndConfigReader jobAndConfigReader = new JobAndConfigReader();
-
 	}
 
 	public static void main(String args[]) {

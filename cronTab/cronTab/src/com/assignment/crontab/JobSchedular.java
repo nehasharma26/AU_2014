@@ -9,7 +9,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class JobSchedular extends CrontabMainClass implements Runnable {
+/**
+ * 
+ * this class is the job schedular that gets the current time from system and
+ * then checks if there is any particular job for current time in job list If
+ * such a job is present, it executed that job
+ * 
+ */
+public class JobSchedular implements Runnable {
+
+	/**
+	 * 
+	 * @return returns the current time of the system converted into minutes
+	 */
 	public int getCurrentTime() {
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
 		String timeString = sdf.format(new Date());
@@ -28,10 +40,11 @@ public class JobSchedular extends CrontabMainClass implements Runnable {
 			ExecutorService pool = Executors.newFixedThreadPool(20);
 			List<Future<String>> futures = new ArrayList<Future<String>>(20);
 			int currentTime = getCurrentTime();
-			boolean blnExists = tm.containsValue(currentTime);
+			boolean blnExists = CrontabMainClass.tm.containsValue(currentTime);
 			if (blnExists) {
-				pool.submit(new Job(utilSleepTime, tm.get(currentTime)));
-				tm.remove(currentTime);
+				pool.submit(new Job(CrontabMainClass.utilSleepTime,
+						CrontabMainClass.tm.get(currentTime)));
+				CrontabMainClass.tm.remove(currentTime);
 			}
 
 			for (Future<String> future : futures) {

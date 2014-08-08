@@ -2,7 +2,13 @@ package com.assignment.crontab;
 
 import java.util.concurrent.Callable;
 
-public class Job implements Callable{
+/**
+ * 
+ * ececuting the job
+ *
+ */
+
+public class Job implements Callable<String>{
 	String job;
 	int utilSleepTime;
 	public Job(int time,String job){

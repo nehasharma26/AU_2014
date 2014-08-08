@@ -8,7 +8,13 @@ public class ProhibitFileThread implements Runnable{
 	public ProhibitFileThread(String fileName){
 		this.fileName=fileName;
 	}
-	
+	/**
+	 * 
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * 
+	 * prohibit() applies lock on the file
+	 */
 	public void prohibit() throws IOException, InterruptedException{
 		FileInputStream in = new FileInputStream(fileName);
 		try {

@@ -6,31 +6,42 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.TimerTask;
 
-public class InsertJob extends CrontabMainClass {
+/**
+ * This class inserts the time and job read from file into data structure
+ *
+ */
 
-	public static void insert() {
+public class InsertJob extends TimerTask implements Runnable {
+	@Override
+	public void run() {
 		File file = new File("C:\\Users\\Accolite\\workspaceAssgn\\cron.txt");
-		BufferedReader in = null;
-		InputStream fin;
-		try {
-			fin = new FileInputStream(file);
-			in = new BufferedReader(new InputStreamReader(fin));
-			String readLine;
-			String[] splitTimeJob;
-			while ((readLine = in.readLine()) != null) {
-				splitTimeJob = readLine.split("\t");//split time and job by tab
-				String job = splitTimeJob[1];
-				int time = Integer.parseInt(splitTimeJob[0].replaceAll("[\\D]", ""));
-				int t1 = time / 100;
-				int t2 = time - t1 * 100;
-				time = t1 * 60 + t2;
-				tm.put(time, job);//inserting time and job in tree map
+		if (file.exists() && !file.isDirectory()) {
+			BufferedReader in = null;
+			InputStream fin;
+			try {
+				fin = new FileInputStream(file);
+				in = new BufferedReader(new InputStreamReader(fin));
+				String readLine;
+				String[] splitTimeJob;
+				while ((readLine = in.readLine()) != null) {
+					splitTimeJob = readLine.split("\t");// split time and job by
+														// tab
+					String job = splitTimeJob[1];
+					int time = Integer.parseInt(splitTimeJob[0].replaceAll(
+							"[\\D]", ""));
+					int t1 = time / 100;
+					int t2 = time - t1 * 100;
+					time = t1 * 60 + t2;
+					CrontabMainClass.tm.put(time, job);// inserting time and job in tree map
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
+		}
+		
 	}
 
 }

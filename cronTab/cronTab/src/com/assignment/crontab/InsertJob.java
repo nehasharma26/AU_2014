@@ -3,9 +3,11 @@ package com.assignment.crontab;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.TimerTask;
 
 /**
@@ -36,8 +38,20 @@ public class InsertJob extends TimerTask implements Runnable {
 					time = t1 * 60 + t2;
 					CrontabMainClass.tm.put(time, job);// inserting time and job in tree map
 				}
+				in.close();
+				fin.close();
 			} catch (IOException e) {
 				e.printStackTrace();
+			}finally{
+				//deleting the entries that have been read from cron.txt
+				PrintWriter pw = null;
+				try {
+					pw = new PrintWriter("C:\\Users\\Accolite\\workspaceAssgn\\cron.txt");
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+				pw.close();
+				
 			}
 
 		}

@@ -20,6 +20,8 @@ public class ReadUtilConfig extends CrontabMainClass {
 				in = new BufferedReader(new InputStreamReader(fin));
 				readUtilSleepTime(Integer.parseInt(in.readLine()));
 				creatLockOnFile(in.readLine());
+				in.close();
+				fin.close();
 
 			} catch (IOException e) {
 				e.printStackTrace();

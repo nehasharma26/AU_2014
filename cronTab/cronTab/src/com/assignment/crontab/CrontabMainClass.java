@@ -12,7 +12,6 @@ public class CrontabMainClass {
 
 	public static void main(String args[]) {
 		crontabMainClass();
-		new ReadUtilConfig();
 		JobAndConfigReader jobAndConfigReader = new JobAndConfigReader();
 		Thread jobAndConfigReaderThread = new Thread(jobAndConfigReader);
 		jobAndConfigReaderThread.start();

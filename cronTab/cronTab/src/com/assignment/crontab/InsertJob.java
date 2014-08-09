@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 /**
  * This class inserts the time and job read from file into data structure
@@ -16,6 +17,7 @@ import java.util.TimerTask;
  */
 
 public class InsertJob extends TimerTask implements Runnable {
+	private static final Logger log = Logger.getLogger( InsertJob.class.getName() );
 	@Override
 	public void run() {
 		File file = new File("C:\\Users\\Accolite\\workspaceAssgn\\cron.txt");
@@ -58,8 +60,7 @@ public class InsertJob extends TimerTask implements Runnable {
 			}
 
 		} else {
-			System.out
-					.println("C:\\Users\\Accolite\\workspaceAssgn\\cron.txt doesnt exist");
+			log.info("C:\\Users\\Accolite\\workspaceAssgn\\cron.txt doesnt exist");
 
 		}
 

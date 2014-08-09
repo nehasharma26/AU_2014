@@ -6,8 +6,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.logging.Logger;
 
-public class ReadUtilConfig extends CrontabMainClass {
+public class ReadUtilConfig  {
+	
+	private static final Logger log = Logger.getLogger( ReadUtilConfig.class.getName() );
 
 	public ReadUtilConfig() {
 		File file = new File(
@@ -28,8 +31,7 @@ public class ReadUtilConfig extends CrontabMainClass {
 			}
 
 		} else {
-			System.out
-					.println("C:\\Users\\Accolite\\workspaceAssgn\\utilConfig.txt doesnt exist");
+			log.info("C:\\Users\\Accolite\\workspaceAssgn\\utilConfig.txt doesnt exist");
 		}
 	}
 
@@ -45,7 +47,11 @@ public class ReadUtilConfig extends CrontabMainClass {
 		 * as sleep time
 		 */
 		String splitTime[] = time.split(":");
-		utilSleepTime = Integer.parseInt(splitTime[1]);
+		if (null != time && splitTime.length>1){
+			CrontabMainClass.utilSleepTime = Integer.parseInt(splitTime[1]);
+		} else {
+			CrontabMainClass.utilSleepTime = 0;
+		}
 	}
 
 	/**
@@ -55,7 +61,7 @@ public class ReadUtilConfig extends CrontabMainClass {
 	 * @throws IOException
 	 */
 	public static void creatLockOnFile(String fileNames) throws IOException {
-		fileNames = fileNames.substring(fileNames.indexOf(':') + 1);
+		fileNames = fileNames.substring(fileNames.indexOf('\\') + 1);
 		String fileName[] = fileNames.split(",");
 		for (int i = 0; i < fileName.length; i++) {
 			File file = new File(fileName[i]);
@@ -63,7 +69,7 @@ public class ReadUtilConfig extends CrontabMainClass {
 			if (file.exists() && !file.isDirectory()) {
 				ProhibitFiles.prohibitFiles(fileName[i]);
 			} else {
-				System.out.println(fileName[i] + " doesnt exist");
+				log.info(fileName[i] + " doesnt exist");
 			}
 		}
 	}

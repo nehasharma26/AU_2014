@@ -12,13 +12,14 @@ import java.util.TimerTask;
 
 /**
  * This class inserts the time and job read from file into data structure
- *
+ * 
  */
 
 public class InsertJob extends TimerTask implements Runnable {
 	@Override
 	public void run() {
 		File file = new File("C:\\Users\\Accolite\\workspaceAssgn\\cron.txt");
+		//check if file exist 
 		if (file.exists() && !file.isDirectory()) {
 			BufferedReader in = null;
 			InputStream fin;
@@ -36,26 +37,32 @@ public class InsertJob extends TimerTask implements Runnable {
 					int t1 = time / 100;
 					int t2 = time - t1 * 100;
 					time = t1 * 60 + t2;
-					CrontabMainClass.tm.put(time, job);// inserting time and job in tree map
+					CrontabMainClass.tm.put(time, job);// inserting time and job
+														// in tree map
 				}
 				in.close();
 				fin.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-			}finally{
-				//deleting the entries that have been read from cron.txt
+			} finally {
+				// deleting the entries that have been read from cron.txt
 				PrintWriter pw = null;
 				try {
-					pw = new PrintWriter("C:\\Users\\Accolite\\workspaceAssgn\\cron.txt");
+					pw = new PrintWriter(
+							"C:\\Users\\Accolite\\workspaceAssgn\\cron.txt");
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
 				pw.close();
-				
+
 			}
 
+		} else {
+			System.out
+					.println("C:\\Users\\Accolite\\workspaceAssgn\\cron.txt doesnt exist");
+
 		}
-		
+
 	}
 
 }

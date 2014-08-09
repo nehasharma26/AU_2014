@@ -18,7 +18,7 @@ public class ReadUtilConfig extends CrontabMainClass {
 			try {
 				fin = new FileInputStream(file);
 				in = new BufferedReader(new InputStreamReader(fin));
-				readUtilSleepTime(Integer.parseInt(in.readLine()));
+				readUtilSleepTime(in.readLine());
 				creatLockOnFile(in.readLine());
 				in.close();
 				fin.close();
@@ -27,6 +27,9 @@ public class ReadUtilConfig extends CrontabMainClass {
 				e.printStackTrace();
 			}
 
+		} else {
+			System.out
+					.println("C:\\Users\\Accolite\\workspaceAssgn\\utilConfig.txt doesnt exist");
 		}
 	}
 
@@ -35,8 +38,14 @@ public class ReadUtilConfig extends CrontabMainClass {
 	 *            : time in utilConfig.txt for sleeping
 	 */
 
-	public static void readUtilSleepTime(int time) {
-		utilSleepTime = time;
+	public static void readUtilSleepTime(String time) {
+		/*
+		 * Time is given in format sleep:<sleeptime> in utilConfig.txt Therefore
+		 * we need to split string <sleep> and time given and use the time given
+		 * as sleep time
+		 */
+		String splitTime[] = time.split(":");
+		utilSleepTime = Integer.parseInt(splitTime[1]);
 	}
 
 	/**
@@ -50,8 +59,11 @@ public class ReadUtilConfig extends CrontabMainClass {
 		String fileName[] = fileNames.split(",");
 		for (int i = 0; i < fileName.length; i++) {
 			File file = new File(fileName[i]);
+			// if file exists, then only proohibit it
 			if (file.exists() && !file.isDirectory()) {
 				ProhibitFiles.prohibitFiles(fileName[i]);
+			} else {
+				System.out.println(fileName[i] + " doesnt exist");
 			}
 		}
 	}

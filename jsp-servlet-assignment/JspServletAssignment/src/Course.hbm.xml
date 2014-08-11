@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="assignment.hibernate.enteties">
+ <class name="Course" table="course">
+ <meta attribute="class-description">
+ This class contains the institute detail. 
+ </meta>
+ <id name="courseId" type="int" column="id">
+ <generator class="native"/>
+ </id>
+ <property name="name" column="name" type="string"/>
+ <property name="description" column="description" type="string"/>
+ <property name="durationInMonths" column="durationInMonths" type="int"/>
+ <property name="admissionProcess" column="admissionProcess" type="string"/>
+ <property name="eligibilityCriteria" column="eligibilityCriteria" type="string"/></class>
+</hibernate-mapping>

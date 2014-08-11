@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+	<session-factory>
+		<!-- DataSource & Connection info. -->
+		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+		<property name="hibernate.connection.url">jdbc:mysql://localhost:3306/jspservletdb</property>
+		<property name="hibernate.connection.username">root</property>
+		<property name="hibernate.connection.password"></property>
+
+		<!-- General Hibernate settings. -->
+		<property name="show_sql">true</property>
+		<property name="format_sql">true</property>
+		<property name="use_sql_comments">true</property>
+		<property name="hbm2ddl.auto">validate</property>
+        <property name="current_session_context_class">thread</property>
+
+		<!-- DDL Mode. -->
+		<property name="hbm2ddl.auto">create</property>
+
+		<!-- 2nd Level Cache. -->
+		<!--  property name="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.EhCacheRegionFactory</property>-->
+
+		<!-- All our Hibernate mapping XML files. -->
+		
+        <mapping resource="Institute.hbm.xml"/>
+        <mapping resource="Course.hbm.xml"/>
+	</session-factory>
+</hibernate-configuration>

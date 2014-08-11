@@ -39,6 +39,7 @@ Institute inst=mi.getinstitute(id);
 <tr></tr>
 <tr><td><a href="viewFullInfo.jsp?id=<%=id%>">view full info of institute</a></td></tr>
 <tr><td><a href="deleteInst.jsp?id=<%=id%>">Delete institute</a></td></tr>
+<tr><td><a href="update.jsp?id=<%=id%>">update info of institute</a></td></tr>
 </table>
 </body>
 </html>

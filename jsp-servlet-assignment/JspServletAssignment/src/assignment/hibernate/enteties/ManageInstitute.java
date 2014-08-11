@@ -5,6 +5,7 @@ import hibernate.util.HibernateUtil;
 import java.util.*;
 
 import org.hibernate.HibernateException;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
@@ -13,14 +14,6 @@ import org.hibernate.cfg.Configuration;
 public class ManageInstitute {
 	private static SessionFactory factory = HibernateUtil.getSessionFactory();
 	Session session = factory.openSession();
-	public static void main(String args[]){
-		ManageInstitute mi=new ManageInstitute();
-		mi.listInstitutes();
-		mi.deleteInstitute(2);
-	}
-	public static String test(){
-		return ("hello");
-	}
 	public ArrayList<Institute> listInstitutes() {
 		Transaction tx = null;
 		ArrayList<Institute> array=null;
@@ -80,4 +73,17 @@ public class ManageInstitute {
 		session.getTransaction().commit();
 		return instid;
 	}
-}
+	public void update(int id,String title,String description,String location,String branches,String courses)
+	{
+		String hql = "UPDATE institute set title = :title,description= :description,  location = :location,branches = :branches,courses :=courses "  + 
+	             "WHERE instId = :id";
+	Query query = session.createQuery(hql);
+	query.setParameter("id", id);
+	query.setParameter("title", title);
+	query.setParameter("description", description);
+	query.setParameter("location", location);
+	query.setParameter("branches", branches);
+	query.setParameter("courses", courses);
+	int result = query.executeUpdate();
+	}
+	}

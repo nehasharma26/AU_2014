@@ -3,15 +3,16 @@ package assignment.hibernate.enteties;
 import hibernate.util.HibernateUtil;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 import org.hibernate.HibernateException;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public class ManageInstitute {
+	private static final Logger logger = Logger.getLogger(ManageInstitute.class.getName());
 	private static SessionFactory factory = HibernateUtil.getSessionFactory();
 	Session session = factory.openSession();
 	public ArrayList<Institute> listInstitutes() {
@@ -26,6 +27,7 @@ public class ManageInstitute {
 				}
 			tx.commit();
 		} catch (HibernateException e) {
+			logger.info("hibernate exception caught:" + e);
 			if (tx != null)
 				tx.rollback();
 			e.printStackTrace();
@@ -52,6 +54,7 @@ public class ManageInstitute {
 			session.delete(Institute);
 			tx.commit();
 		} catch (HibernateException e) {
+			 logger.info("hibernate exception caught:" + e);
 			if (tx != null)
 				tx.rollback();
 			e.printStackTrace();
@@ -67,23 +70,35 @@ public class ManageInstitute {
 			instid = (Integer) session.save(in);
 			// session.save(in);
 		} catch (Exception e) {
+			 logger.info("hibernate exception caught:" + e);
 			session.getTransaction().rollback();
 			e.printStackTrace();
 		}
 		session.getTransaction().commit();
 		return instid;
 	}
-	public void update(int id,String title,String description,String location,String branches,String courses)
-	{
-		String hql = "UPDATE institute set title = :title,description= :description,  location = :location,branches = :branches,courses :=courses "  + 
-	             "WHERE instId = :id";
-	Query query = session.createQuery(hql);
-	query.setParameter("id", id);
-	query.setParameter("title", title);
-	query.setParameter("description", description);
-	query.setParameter("location", location);
-	query.setParameter("branches", branches);
-	query.setParameter("courses", courses);
-	int result = query.executeUpdate();
-	}
-	}
+	 public void updateInstitute(Integer Instituteid, String title, String desc,
+			   String location, String branches, String imageurl) {
+			  Session session = factory.openSession();
+			  Transaction tx = null;
+			  try {
+			   tx = session.beginTransaction();
+			   Institute inst = (Institute) session.get(Institute.class,
+			     Instituteid);
+			   inst.setTitle(title);
+			   inst.setDescription(desc);
+			   inst.setLocation(location);
+			   inst.setBranches(branches);
+			//   inst.setImageurl(imageurl);
+			   session.update(inst);
+			   tx.commit();
+			  } catch (HibernateException e) {
+			   if (tx != null)
+			    tx.rollback();
+			   logger.info("hibernate exception caught:" + e);
+			   e.printStackTrace();
+			  } finally {
+			   session.close();
+			  }
+			 }
+}

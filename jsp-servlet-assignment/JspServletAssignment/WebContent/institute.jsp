@@ -38,7 +38,7 @@
 <div class="wrapper">
 	<form method="post">
 
-		<table width=80% border="0">
+		<table width=80% border=0 >
 			<tr>
 				<td><h4>instId</h4></td>
 				<td><h4>title</h4></td>
@@ -64,8 +64,8 @@
 				<td><%=insti.getDescription()%></td>
 				<td><%=insti.getLocation()%></td>
 				<td><%=insti.getBranches()%></td>
-				<td><a href="displayInfo.jsp?id=<%=insti.getInstId()%>">click to see details</a>
-			</tr>
+				
+			</tr><tr><td><a href="displayInfo.jsp?id=<%=insti.getInstId()%>">view info</a></td></tr><tr><td>   </td></tr><tr><td>   </td></tr>
 			<%
 				}
 					tx.commit();

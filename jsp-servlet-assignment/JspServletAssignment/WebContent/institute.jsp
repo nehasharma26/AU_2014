@@ -74,7 +74,10 @@
 						tx.rollback();
 					e.printStackTrace();
 				} finally {
-					// session.close
+					
+					//converting to json
+					Gson gson = new Gson();
+			        String jsonNames = gson.toJson(array);
 				}
 			%>
 

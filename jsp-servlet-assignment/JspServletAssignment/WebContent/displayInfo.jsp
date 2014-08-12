@@ -41,6 +41,7 @@ Institute inst=mi.getinstitute(id);
 <tr><td><a href="deleteInst.jsp?id=<%=id%>">Delete institute</a></td></tr>
 <tr><td><a href="update.jsp?id=<%=id%>">update institute</a></td></tr>
 <tr><td><a href="generateXML.jsp">generate xml</a></td></tr>
+<tr><td><a href="generateJson.jsp">generate json</a></td></tr>
 </table>
 </body>
 </html>
